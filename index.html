@@ -1,0 +1,176 @@
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<title>Worldwide Weatherman App</title>
+
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+
+	<link rel="preconnect" href="https://fonts.gstatic.com">
+	<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+
+	<script src="https://kit.fontawesome.com/93b9f82d17.js" crossorigin="anonymous"></script>
+
+	<style>
+
+		body {
+			background: no-repeat center center fixed;
+			background-image: url('https://eightbitweapon.files.wordpress.com/2014/07/8-bit-weapon-bits-with-byte-background.png');
+			background-size: cover;
+		}
+		h1 {
+			font-family: 'Press Start 2P', cursive;
+			text-align: center;
+			color: white;
+			width: 50%;
+			margin-top: 40px;
+			margin-bottom: 40px;
+			margin-left: auto;
+			margin-right: auto;
+			padding: 7px;
+			/* Border */
+			border-width: 6.5px;
+			border-style: dashed;
+			animation-name: neonBackground;
+			animation-duration: 7s;
+			animation-iteration-count: infinite;
+		}
+		@keyframes neonBackground {
+			0% {
+				border-color: #00FF33 #FF00CC #00FFFF #9D00FF;
+			}
+			25% {
+				border-color: #9D00FF #00FF33 #FF00CC #00FFFF;
+			}
+			50% {
+				border-color: #00FFFF #9D00FF #00FF33 #FF00CC;
+			}
+			75% {
+				border-color: #FF00CC #00FFFF #9D00FF #00FF33;
+			}
+			100% {
+				border-color: #00FF33 #FF00CC #00FFFF #9D00FF;
+			}
+		}
+		div.phone {
+			font-family: 'Press Start 2P', cursive;
+			margin: auto;
+			width: 330px;
+			height: 450px;
+			text-align: center;
+			background-color: black;
+			border-color: #404040;
+			border-radius: 1em;
+			border-style: solid;
+			border-width: 10px;
+			/*padding: 5px;*/
+		}
+
+		/* Same Row */
+		.phoneTop {
+			background-color: #404040;
+			padding-bottom: 3px;
+		}
+		.fa-dot-circle {
+			color: black;
+		}
+		hr {
+			width: 20%;
+		}
+
+		/* Same Row */
+		.phoneCode {
+			text-align: left;
+			padding-top: 5px;
+		}
+		.zipCode {
+			font-size: 11.2px;
+			width: 100%;
+			margin-left: 8px;
+		}
+		.col-10 {
+			padding-right: 0;
+		}
+		.fa-caret-square-right {
+			font-size: 22px;
+			color: #00FFFF;
+			padding-left: 4px;
+		}
+
+		.phoneResults {
+			margin: 5px 3px 0 3px;
+		}
+		h2 {
+			font-size: 25px;
+		}
+		.phoneBottom {
+
+		}
+
+	</style>
+</head>
+<body id="body">
+
+	<h1>Worldwide Weatherman</h1>
+
+	<div class="phone">
+		<div class="phoneTop">
+			<i class="fas fa-dot-circle"></i>
+		</div>
+
+		<div class="row phoneCode">
+			<div class="col-10">
+				<input type="text" placeholder="Zip Code" class="zipCode" id="new-location">
+			</div>
+			<div class="col-2">
+				<i class="far fa-caret-square-right" id="change-location"></i>
+			</div>
+		</div>
+
+		<div class="phoneResults">
+			<h2 id="conditions"></h2>
+		</div>
+
+		<div class="phoneBottom">
+			
+		</div>
+	</div>
+
+	<script>
+
+		// Change to '0' zip code
+		getWeather(72758);
+
+		document.getElementById("change-location").addEventListener('click', function() {
+			getWeather(document.getElementById("new-location").value);
+		});
+		
+		function getWeather(zipcode) {
+
+			var oReq = new XMLHttpRequest();
+			oReq.addEventListener("load", function(event) {
+				let response = JSON.parse(event.currentTarget.response);
+				console.log(response);
+
+				let output = document.getElementById("conditions");
+				output.innerText = response.name + " is currently " + response.weather[0].main + " and " + Math.ceil(response.main.temp) + " degrees.";
+
+				if (response.weather[0].main == 'Clouds') {
+					document.getElementById('body').classList.add('cloudy');
+				}
+
+				if (response.weather[0].main == 'Clear') {
+					document.getElementById('body').classList.add('clear');
+				}
+
+			});
+			oReq.open("GET", "https://api.openweathermap.org/data/2.5/weather?zip=" + zipcode +",us&appid=a91b389e4bb1c01d95c1e82b85756fdc&units=imperial");
+			oReq.send();
+
+		}
+
+	</script>
+	
+</body>
+</html>
