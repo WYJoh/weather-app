@@ -25,7 +25,7 @@
 			color: white;
 			width: 50%;
 			margin-top: 40px;
-			margin-bottom: 40px;
+			margin-bottom: 30px;
 			margin-left: auto;
 			margin-right: auto;
 			padding: 7px;
@@ -59,11 +59,14 @@
 			width: 330px;
 			height: 450px;
 			text-align: center;
+			word-wrap: break-word;
+			hyphens: auto;
 			background-color: black;
 			border-color: #404040;
 			border-radius: 1em;
 			border-style: solid;
 			border-width: 10px;
+			border-bottom-width: 40px;
 			/*padding: 5px;*/
 		}
 
@@ -88,6 +91,7 @@
 			font-size: 11.2px;
 			width: 100%;
 			margin-left: 8px;
+			margin-bottom: 20px;
 		}
 		.col-10 {
 			padding-right: 0;
@@ -103,10 +107,34 @@
 		}
 		h2 {
 			font-size: 25px;
+			color: #D0BEB8;
 		}
+		.upperIconLine {
+			width: 75%;
+			margin: auto;
+			position: relative;
+			top: 130px;
+			border-color: #B0B0B0;
+			border-radius: 1em;
+			border-style: solid;
+			border-width: 3px;
+		}
+		.weatherIcons {
+			font-size: 20px;
+			color: #3F3F3F;
+			position: relative;
+			top: 140px;
+		}
+		/*
 		.phoneBottom {
-
+			background-color: #404040;
+			color: black;
+			font-size: 30px;
+			position: relative;
+			top: 180px;
+			padding: 5px;
 		}
+		*/
 
 	</style>
 </head>
@@ -129,23 +157,43 @@
 		</div>
 
 		<div class="phoneResults">
-			<h2 id="conditions"></h2>
+			<h2 id="temperature"></h2>
+<!--
+			<br>
+			<h3 id="location"></h3>
+			<br>
+			<h4 id ="weatherIcons"></h4>
+-->
 		</div>
 
-		<div class="phoneBottom">
-			
+		<hr class="upperIconLine">
+
+		<div class="row">
+			<div class="col-12 weatherIcons">
+				<i class="fas fa-sun" id="sunIcon"></i>
+				<i class="fas fa-cloud" id="cloudIcon"></i>
+				<i class="fas fa-cloud-rain" id="drizzleIcon"></i>
+				<i class="fas fa-cloud-showers-heavy" id="rainIcon"></i>
+				<i class="fas fa-bolt" id="lightningIcon"></i>
+				<i class="fas fa-snowflake" id="snowIcon"></i>
+				<i class="fas fa-smog" id="fogIcon"></i>
+			</div>
 		</div>
+<!--
+		<div class="phoneBottom">
+			<i class="far fa-circle"></i>
+		</div>
+-->
 	</div>
 
 	<script>
 
-		// Change to '0' zip code
-		getWeather(72758);
+		getWeather(72704);
 
 		document.getElementById("change-location").addEventListener('click', function() {
 			getWeather(document.getElementById("new-location").value);
 		});
-		
+
 		function getWeather(zipcode) {
 
 			var oReq = new XMLHttpRequest();
@@ -153,18 +201,68 @@
 				let response = JSON.parse(event.currentTarget.response);
 				console.log(response);
 
-				let output = document.getElementById("conditions");
-				output.innerText = response.name + " is currently " + response.weather[0].main + " and " + Math.ceil(response.main.temp) + " degrees.";
-
-				if (response.weather[0].main == 'Clouds') {
-					document.getElementById('body').classList.add('cloudy');
-				}
+				let output = document.getElementById("temperature");
+				output.innerText = Math.ceil(response.main.temp) + "°F " + "/ " + response.name + " / " + response.weather[0].main;
 
 				if (response.weather[0].main == 'Clear') {
-					document.getElementById('body').classList.add('clear');
+					var colYes1 = document.getElementById("sunIcon");
+					colYes1.style.color = "#E9D932";
 				}
+				else {
+					var colNo1 = document.getElementById("sunIcon");
+					colNo1.style.color = "#3F3F3F";
+				};
+				if (response.weather[0].main == 'Clouds') {
+					var colYes2 = document.getElementById("cloudIcon");
+					colYes2.style.color = "#DDDCDC";
+				}
+				else {
+					var colNo2 = document.getElementById("cloudIcon");
+					colNo2.style.color = "#3F3F3F";
+				};
+				if (response.weather[0].main == 'Drizzle') {
+					var colYes3 = document.getElementById("drizzleIcon");
+					colYes3.style.color = "#366CCA";
+				}
+				else {
+					var colNo3 = document.getElementById("drizzleIcon");
+					colNo3.style.color = "#3F3F3F";
+				};
+				if (response.weather[0].main == 'Rain') {
+					var colYes4 = document.getElementById("rainIcon");
+					colYes4.style.color = "#264F96";
+				}
+				else {
+					var colNo4 = document.getElementById("rainIcon");
+					colNo4.style.color = "#3F3F3F";
+				};
+				if (response.weather[0].main == 'Thunderstorm') {
+					var colYes5 = document.getElementById("lightningIcon");
+					colYes5.style.color = "#CCBD10";
+				}
+				else {
+					var colNo5 = document.getElementById("lightningIcon");
+					colNo5.style.color = "#3F3F3F";
+				};
+				if (response.weather[0].main == 'Snow') {
+					var colYes6 = document.getElementById("snowIcon");
+					colYes6.style.color = "#FFFFF9";
+				}
+				else {
+					var colNo6 = document.getElementById("snowIcon");
+					colNo6.style.color = "#3F3F3F";
+				};
+				if (response.weather[0].main == 'Mist') {
+					var colYes7 = document.getElementById("fogIcon");
+					colYes7.style.color = "#B0AFA1";
+				}
+				else {
+					var colNo7 = document.getElementById("fogIcon");
+					colNo7.style.color = "#3F3F3F";
+				};
 
 			});
+
 			oReq.open("GET", "https://api.openweathermap.org/data/2.5/weather?zip=" + zipcode +",us&appid=a91b389e4bb1c01d95c1e82b85756fdc&units=imperial");
 			oReq.send();
 
